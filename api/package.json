@@ -1,0 +1,28 @@
+{
+  "name": "briefgenius-api",
+  "version": "1.0.0",
+  "author": "John Kueh",
+  "license": "ISC",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watch --runInBand"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
+    "apollo-server-micro": "^2.4.8",
+    "bcrypt": "^3.0.4",
+    "cloudinary": "^1.14.0",
+    "graphql": "^14.1.1",
+    "graphql-iso-date": "^3.6.1",
+    "graphql-middleware": "^3.0.2",
+    "graphql-shield": "^5.3.5",
+    "graphql-tools": "^4.0.4",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "prisma-client-lib": "^1.30.4",
+    "uuid": "^3.3.2",
+    "yup": "^0.27.0"
+  }
+}

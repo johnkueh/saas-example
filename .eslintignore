@@ -1,0 +1,4 @@
+/web/lib/*
+/api/generated/*
+/cypress/plugins/*
+/cypress/support/*

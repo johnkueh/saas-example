@@ -1,0 +1,37 @@
+type User {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  password: String!
+  resetPasswordToken: String @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  forms: [Form] @relation(name: "UserForms", onDelete: CASCADE)
+}
+
+type Form {
+  id: ID! @unique
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  user: User @relation(name: "UserForms")
+  logos: [Logo] @relation(name: "FormLogos", onDelete: CASCADE)
+  submissions: [Submission] @relation(name: "FormSubmissions", onDelete: CASCADE)
+}
+
+type Submission {
+  id: ID! @unique
+  name: String!
+  logos: [Logo!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  form: Form! @relation(name: "FormSubmissions")
+}
+
+type Logo {
+  id: ID! @unique
+  assetId: String! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  form: Form @relation(name: "FormLogos")
+}

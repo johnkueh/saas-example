@@ -1,0 +1,10 @@
+/node_modules
+.env
+
+/api/node_modules
+/api/generated
+/api/.env
+
+/web/node_modules
+/web/.env
+/web/.next
