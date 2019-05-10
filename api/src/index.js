@@ -1,6 +1,7 @@
 import { ApolloServer, gql } from 'apollo-server-micro';
 import { makeExecutableSchema } from 'graphql-tools';
 import { applyMiddleware } from 'graphql-middleware';
+import jsonwebtoken from 'jsonwebtoken';
 import { prisma } from '../generated/prisma-client';
 import typeDefs from './schema';
 import resolvers from './resolvers';
@@ -19,9 +20,14 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   context: async ({ req }) => {
+    const bearer = req.headers.authorization || '';
+    const token = bearer.replace('Bearer ', '');
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    const user = await prisma.user({ id: decoded.id });
+
     return {
       prisma,
-      user: null
+      user
     };
   }
 });
