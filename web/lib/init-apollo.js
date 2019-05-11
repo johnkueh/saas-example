@@ -35,8 +35,6 @@ if (!process.browser) {
 }
 
 function create(initialState) {
-  console.log('httpLink', httpLink);
-  console.log('httpLink.uri', httpLink.uri);
   return new ApolloClient({
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
