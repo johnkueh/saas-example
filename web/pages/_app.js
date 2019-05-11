@@ -8,6 +8,7 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { CloudinaryContext } from 'cloudinary-react';
 import fetch from 'isomorphic-unfetch';
+import config from '../app.config';
 import { getItem } from '../lib/local-storage';
 import AuthProvider from '../contexts/authentication';
 import '../styles/index.scss';
@@ -17,7 +18,7 @@ if (!process.browser) {
 }
 
 const httpLink = createHttpLink({
-  uri: '/api/graphql'
+  uri: config.API_URL
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -52,7 +53,7 @@ class MyApp extends App {
         </Head>
         <Container>
           <ApolloProvider client={client}>
-            <CloudinaryContext cloudName={process.env.CLOUDINARY_CLOUD_NAME}>
+            <CloudinaryContext cloudName={config.CLOUDINARY_CLOUD_NAME}>
               <Component {...pageProps} apolloClient={client} />
             </CloudinaryContext>
           </ApolloProvider>

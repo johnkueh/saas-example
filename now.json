@@ -27,5 +27,8 @@
     "INVITE_USER_TEMPLATE_ID": "@invite_user_template_id",
     "SUPPORT_EMAIL_ADDRESS": "@support_email_address",
     "CLOUDINARY_URL": "@cloudinary_url"
+  },
+  "github": {
+    "enabled": true
   }
 }

@@ -1,6 +1,7 @@
 import { getItem } from './local-storage';
 import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import introspectionQueryResultData from './fragment-types.json';
+import config from '../app.config';
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData
 });
@@ -13,7 +14,7 @@ import fetch from 'isomorphic-unfetch';
 let apolloClient = null;
 
 const httpLink = new HttpLink({
-  uri: '/api/graphql' // Server URL (must be absolute)
+  uri: config.API_URL // Server URL (must be absolute)
 });
 
 const authMiddleware = new ApolloLink((operation, forward) => {

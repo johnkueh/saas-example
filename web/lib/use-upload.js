@@ -1,3 +1,5 @@
+import config from '../app.config';
+
 export const useUpload = () => {
   return {
     openWidget: ({ onUpload } = {}) => {
@@ -17,8 +19,8 @@ export const onEvent = (callback, err, info) => {
 };
 
 const widgetOptions = {
-  cloudName: 'johnkueh',
-  uploadPreset: 'y2o0243u',
+  cloudName: config.CLOUDINARY_CLOUD_NAME,
+  uploadPreset: config.CLOUDINARY_UPLOAD_PRESET,
   sources: ['local', 'url', 'camera', 'image_search', 'facebook', 'dropbox', 'instagram'],
   showAdvancedOptions: false,
   // cropping: true,
