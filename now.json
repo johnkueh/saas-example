@@ -1,7 +1,7 @@
 {
   "version": 2,
   "name": "saas-example",
-  "regions": ["sfo1"],
+  "regions": ["iad1"],
   "builds": [
     { "src": "web/package.json", "use": "@now/next" },
     { "src": "api/src/*.js", "use": "@now/node", "config": { "maxLambdaSize": "10mb" } }
