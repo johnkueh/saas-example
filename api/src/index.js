@@ -20,10 +20,12 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   context: async ({ req }) => {
-    const bearer = req.headers.authorization || '';
-    const token = bearer.replace('Bearer ', '');
-    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-    const user = await prisma.user({ id: decoded.id });
+    let user = {};
+    try {
+      const bearer = req.headers.authorization || '';
+      const token = bearer.replace('Bearer ', '');
+      user = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    } catch (error) {}
 
     return {
       prisma,
