@@ -1,4 +1,9 @@
-import { graphqlRequest, prisma } from '../../lib/test-util';
+import { request } from '../../lib/test-util';
+import { Prisma } from '../../../generated/prisma-client';
+
+const prisma = new Prisma({
+  endpoint: process.env.PRISMA_ENDPOINT
+});
 
 let user;
 let jwt;
@@ -8,7 +13,7 @@ beforeEach(async () => {
     data: {
       signup: { user, jwt }
     }
-  } = await graphqlRequest({
+  } = await request({
     query: `
       mutation signup($input: SignupInput!) {
         signup(input: $input) {
@@ -63,7 +68,7 @@ it('able to get only forms for user', async () => {
     name: 'Form not from user'
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -103,7 +108,7 @@ it('able to get a single form', async () => {
     }
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -129,7 +134,7 @@ it('able to get a single form', async () => {
 });
 
 it('able create a form', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -155,7 +160,7 @@ it('able create a form', async () => {
 });
 
 it('unable to create a form with invalid fields', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -187,7 +192,7 @@ it('able to update a form with logos', async () => {
     }
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -221,7 +226,7 @@ it('not able to update not own form', async () => {
     name: 'Form 1'
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -257,7 +262,7 @@ it('able to delete own form', async () => {
     }
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -283,7 +288,7 @@ it('not able to delete not own form', async () => {
     name: 'Form 3'
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },

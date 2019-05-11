@@ -2,7 +2,7 @@ import { ApolloServer, gql } from 'apollo-server-micro';
 import { makeExecutableSchema } from 'graphql-tools';
 import { applyMiddleware } from 'graphql-middleware';
 import jsonwebtoken from 'jsonwebtoken';
-import { prisma } from '../generated/prisma-client';
+import { Prisma } from '../generated/prisma-client';
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import schemaDirectives from './directives';
@@ -15,15 +15,30 @@ const schema = applyMiddleware(
   validations
 );
 
-const server = new ApolloServer({
-  schema,
-  introspection: true,
-  playground: true,
-  context: async ({ req }) => {
+const initServer = ({ context }) =>
+  new ApolloServer({
+    schema,
+    introspection: true,
+    playground: true,
+    context
+  });
+
+const getUser = (req, secret) => {
+  try {
     const bearer = req.headers.authorization || '';
     const token = bearer.replace('Bearer ', '');
-    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-    const user = await prisma.user({ id: decoded.id });
+    return jsonwebtoken.verify(token, secret);
+  } catch (error) {
+    return null;
+  }
+};
+
+const server = initServer({
+  context: async ({ req }) => {
+    const prisma = new Prisma({
+      endpoint: process.env.PRISMA_ENDPOINT
+    });
+    const user = getUser(req, process.env.JWT_SECRET);
 
     return {
       prisma,
@@ -32,4 +47,6 @@ const server = new ApolloServer({
   }
 });
 
-export default server.createHandler({ path: '/api/graphql' });
+export const apiPath = '/api/graphql';
+
+export default server.createHandler({ path: apiPath });

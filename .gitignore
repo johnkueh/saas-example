@@ -1,10 +1,14 @@
 /node_modules
 .env
+*.lock
 
 /api/node_modules
 /api/generated
 /api/.env
+/api/*.log
 
 /web/node_modules
 /web/.env
 /web/.next
+/web/*.lock
+

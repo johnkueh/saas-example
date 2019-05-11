@@ -107,7 +107,7 @@ export default {
         };
       }
 
-      throw new ValidationErrors({ token: 'Password reset token is invalid.' });
+      throw ValidationErrors({ token: 'Password reset token is invalid.' });
     },
     async updateUser(parent, { input }, { user, prisma }, info) {
       const { name, email, password } = input;

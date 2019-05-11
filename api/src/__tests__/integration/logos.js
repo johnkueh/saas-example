@@ -1,5 +1,10 @@
 import cloudinaryMock from 'cloudinary';
-import { graphqlRequest, prisma } from '../../lib/test-util';
+import { request } from '../../lib/test-util';
+import { Prisma } from '../../../generated/prisma-client';
+
+const prisma = new Prisma({
+  endpoint: process.env.PRISMA_ENDPOINT
+});
 
 let user;
 let jwt;
@@ -9,7 +14,7 @@ beforeEach(async () => {
     data: {
       signup: { user, jwt }
     }
-  } = await graphqlRequest({
+  } = await request({
     query: `
       mutation signup($input: SignupInput!) {
         signup(input: $input) {
@@ -55,7 +60,7 @@ it('able to delete own logos', async () => {
     }
   });
 
-  await graphqlRequest({
+  await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -74,7 +79,7 @@ it('able to delete own logos', async () => {
 
   expect(cloudinaryMock.uploader.destroy).toBeCalledWith('public-id-1');
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -120,7 +125,7 @@ it('not able to delete other forms logos', async () => {
     }
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
