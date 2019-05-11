@@ -1,6 +1,8 @@
 import React from 'react';
 import App, { Container } from 'next/app';
 import Head from 'next/head';
+import Router from 'next/router';
+import NProgress from 'nprogress';
 import { ApolloProvider } from 'react-apollo-hooks';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
@@ -12,6 +14,14 @@ import config from '../app.config';
 import { getItem } from '../lib/local-storage';
 import AuthProvider from '../contexts/authentication';
 import '../styles/index.scss';
+import 'nprogress/nprogress.css';
+
+Router.events.on('routeChangeStart', url => {
+  NProgress.start();
+});
+
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 if (!process.browser) {
   global.fetch = fetch;
