@@ -17,8 +17,8 @@ export const onEvent = (callback, err, info) => {
 };
 
 const widgetOptions = {
-  cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-  uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
+  cloudName: 'johnkueh',
+  uploadPreset: 'y2o0243u',
   sources: ['local', 'url', 'camera', 'image_search', 'facebook', 'dropbox', 'instagram'],
   showAdvancedOptions: false,
   // cropping: true,
