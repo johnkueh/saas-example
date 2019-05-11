@@ -9,13 +9,13 @@ import schemaDirectives from './directives';
 import { validations } from './middlewares/validations';
 import { permissions } from './middlewares/permissions';
 
-export const schema = applyMiddleware(
+const schema = applyMiddleware(
   makeExecutableSchema({ typeDefs, resolvers, schemaDirectives }),
   ...permissions,
   validations
 );
 
-export const initServer = ({ context }) =>
+const initServer = ({ context }) =>
   new ApolloServer({
     schema,
     introspection: true,
@@ -23,7 +23,7 @@ export const initServer = ({ context }) =>
     context
   });
 
-export const getUser = (req, secret) => {
+const getUser = (req, secret) => {
   try {
     const bearer = req.headers.authorization || '';
     const token = bearer.replace('Bearer ', '');
@@ -33,7 +33,7 @@ export const getUser = (req, secret) => {
   }
 };
 
-export const server = initServer({
+const server = initServer({
   context: async ({ req }) => {
     const prisma = new Prisma({
       endpoint: process.env.PRISMA_ENDPOINT
@@ -47,4 +47,6 @@ export const server = initServer({
   }
 });
 
-export default server.createHandler({ path: '/api/graphql' });
+export const apiPath = '/api/graphql';
+
+export default server.createHandler({ path: apiPath });

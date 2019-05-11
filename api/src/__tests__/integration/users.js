@@ -1,5 +1,5 @@
 import sgMail from '@sendgrid/mail';
-import { graphqlRequest, prisma } from '../../lib/test-util';
+import { request } from '../../lib/test-util';
 import {
   ME,
   SIGNUP,
@@ -9,6 +9,11 @@ import {
   RESET_PASSWORD,
   DELETE_USER
 } from '../../queries/user';
+import { Prisma } from '../../../generated/prisma-client';
+
+const prisma = new Prisma({
+  endpoint: process.env.PRISMA_ENDPOINT
+});
 
 let user;
 let jwt;
@@ -18,7 +23,7 @@ beforeEach(async () => {
     data: {
       signup: { user, jwt }
     }
-  } = await graphqlRequest({
+  } = await request({
     query: SIGNUP,
     variables: {
       input: {
@@ -35,7 +40,7 @@ afterEach(async () => {
 });
 
 it('able to get user profile', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -49,7 +54,7 @@ it('able to get user profile', async () => {
 });
 
 it('able to login successfully', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -74,7 +79,7 @@ it('able to login successfully', async () => {
 });
 
 it('able to signup successfully', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     query: SIGNUP,
     variables: {
       input: {
@@ -97,7 +102,7 @@ it('able to signup successfully', async () => {
 });
 
 it('login - bad credentials', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -117,7 +122,7 @@ it('login - bad credentials', async () => {
 
 describe('signup - validation errors', () => {
   it('returns correct error messages', async () => {
-    const res = await graphqlRequest({
+    const res = await request({
       query: SIGNUP,
       variables: {
         input: {
@@ -136,7 +141,7 @@ describe('signup - validation errors', () => {
   });
 
   it('returns correct error message when email is taken during signup', async () => {
-    const res = await graphqlRequest({
+    const res = await request({
       query: SIGNUP,
       variables: {
         input: {
@@ -154,7 +159,7 @@ describe('signup - validation errors', () => {
 });
 
 it('able to update user profile successfully', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -175,7 +180,7 @@ it('able to update user profile successfully', async () => {
 });
 
 it('able to update user password successfully', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
@@ -197,7 +202,7 @@ it('able to update user password successfully', async () => {
 
 describe('Update user validation errors', () => {
   it('returns correct error messages', async () => {
-    const res = await graphqlRequest({
+    const res = await request({
       headers: {
         Authorization: `Bearer ${jwt}`
       },
@@ -220,7 +225,7 @@ describe('Update user validation errors', () => {
 });
 
 it('not able to request forgot password if user doesnt exist', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     query: FORGOT_PASSWORD,
     variables: {
       input: {
@@ -240,7 +245,7 @@ it('not able to request forgot password if user doesnt exist', async () => {
 });
 
 it('not able to request forgot password if email is not an email', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     query: FORGOT_PASSWORD,
     variables: {
       input: {
@@ -257,7 +262,7 @@ it('not able to request forgot password if email is not an email', async () => {
 });
 
 it('able to request forgot password successfully', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     query: FORGOT_PASSWORD,
     variables: {
       input: {
@@ -280,7 +285,7 @@ it('able to reset password with correct token', async () => {
     data: { resetPasswordToken: 'RESET-PASSWORD-TOKEN' }
   });
 
-  const res = await graphqlRequest({
+  const res = await request({
     query: RESET_PASSWORD,
     variables: {
       input: {
@@ -299,7 +304,7 @@ it('able to reset password with correct token', async () => {
 });
 
 it('not able to reset password with mismatched password', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     query: RESET_PASSWORD,
     variables: {
       input: {
@@ -316,7 +321,7 @@ it('not able to reset password with mismatched password', async () => {
 });
 
 it('not able to reset password with missing token', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     query: RESET_PASSWORD,
     variables: {
       input: {
@@ -333,7 +338,7 @@ it('not able to reset password with missing token', async () => {
 });
 
 it('not able to reset password with wrong token', async () => {
-  const res = await graphqlRequest({
+  const res = await request({
     query: RESET_PASSWORD,
     variables: {
       input: {
@@ -353,7 +358,7 @@ it('able to delete user successfully', async () => {
   const existingUsers = await prisma.users();
   expect(existingUsers.length).toBe(1);
 
-  await graphqlRequest({
+  await request({
     headers: {
       Authorization: `Bearer ${jwt}`
     },
