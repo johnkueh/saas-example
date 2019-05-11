@@ -1,18 +1,17 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withApollo } from 'react-apollo';
 import Router from 'next/router';
 import PageLoading from '../components/page-loading';
 import { AuthContext } from '../contexts/authentication';
 
-const Logout = ({ client }) => {
+const Logout = ({ apolloClient }) => {
   const { setUser, setJwt, setIsLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     setUser(null);
     setJwt(null);
     setIsLoggedIn(false);
-    client.resetStore();
+    apolloClient.resetStore();
 
     Router.push('/login');
   });
@@ -20,8 +19,8 @@ const Logout = ({ client }) => {
   return <PageLoading title="Logging out..." />;
 };
 
-export default withApollo(Logout);
+export default Logout;
 
 Logout.propTypes = {
-  client: PropTypes.objectOf(PropTypes.any).isRequired
+  apolloClient: PropTypes.objectOf(PropTypes.any).isRequired
 };

@@ -1,22 +1,43 @@
+import React from 'react';
 import App, { Container } from 'next/app';
 import Head from 'next/head';
-import React from 'react';
-import { ApolloProvider } from 'react-apollo';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
-import ReactGA from 'react-ga';
+import { ApolloProvider } from 'react-apollo-hooks';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { setContext } from 'apollo-link-context';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { CloudinaryContext } from 'cloudinary-react';
-import withApolloClient from '../lib/with-apollo-client';
+import fetch from 'isomorphic-unfetch';
+import { getItem } from '../lib/local-storage';
 import AuthProvider from '../contexts/authentication';
 import '../styles/index.scss';
 
-class MyApp extends App {
-  componentDidMount() {
-    // ReactGA.initialize('UA-137555254-1');
-    // ReactGA.pageview(window.location.pathname + window.location.search);
-  }
+if (!process.browser) {
+  global.fetch = fetch;
+}
 
+const httpLink = createHttpLink({
+  uri: '/api/graphql'
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = getItem('jwt');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : ''
+    }
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
+
+class MyApp extends App {
   render() {
-    const { Component, pageProps, apolloClient } = this.props;
+    const { Component, pageProps } = this.props;
     return (
       <AuthProvider>
         <Head>
@@ -30,12 +51,10 @@ class MyApp extends App {
           />
         </Head>
         <Container>
-          <ApolloProvider client={apolloClient}>
-            <ApolloHooksProvider client={apolloClient}>
-              <CloudinaryContext cloudName={process.env.CLOUDINARY_CLOUD_NAME}>
-                <Component {...pageProps} />
-              </CloudinaryContext>
-            </ApolloHooksProvider>
+          <ApolloProvider client={client}>
+            <CloudinaryContext cloudName={process.env.CLOUDINARY_CLOUD_NAME}>
+              <Component {...pageProps} apolloClient={client} />
+            </CloudinaryContext>
           </ApolloProvider>
         </Container>
       </AuthProvider>
@@ -43,4 +62,4 @@ class MyApp extends App {
   }
 }
 
-export default withApolloClient(MyApp);
+export default MyApp;
