@@ -9,7 +9,7 @@ import schemaDirectives from './directives';
 import { validations } from './middlewares/validations';
 import { permissions } from './middlewares/permissions';
 
-const schema = applyMiddleware(
+export const schema = applyMiddleware(
   makeExecutableSchema({ typeDefs, resolvers, schemaDirectives }),
   ...permissions,
   validations
@@ -24,17 +24,16 @@ export const initServer = ({ context }) =>
   });
 
 export const getUser = (req, secret) => {
-  let user = null;
   try {
     const bearer = req.headers.authorization || '';
     const token = bearer.replace('Bearer ', '');
-    user = jsonwebtoken.verify(token, secret);
-  } catch (error) {}
-
-  return user;
+    return jsonwebtoken.verify(token, secret);
+  } catch (error) {
+    return null;
+  }
 };
 
-const server = initServer({
+export const server = initServer({
   context: async ({ req }) => {
     const prisma = new Prisma({
       endpoint: process.env.PRISMA_ENDPOINT
