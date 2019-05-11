@@ -3,7 +3,6 @@
 *.lock
 
 /api/node_modules
-/api/generated
 /api/.env
 /api/*.log
 
