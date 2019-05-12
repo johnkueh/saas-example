@@ -2,6 +2,7 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 import uuidv4 from 'uuid/v4';
+import cookie from 'cookie';
 import ValidationErrors from '../helpers/validation-errors';
 import sendEmail from '../services/sendgrid';
 
@@ -12,7 +13,7 @@ export default {
     }
   },
   Mutation: {
-    async signup(parent, { input }, { prisma }, info) {
+    async signup(parent, { input }, { prisma, res }, info) {
       const { name, email, password } = input;
       const existingUser = await prisma.user({ email });
 
@@ -26,27 +27,34 @@ export default {
           email,
           password: hashedPassword(password)
         });
+        const jwt = getJwt({
+          id: user.id,
+          email: user.email
+        });
+
+        res.setHeader('Set-Cookie', cookie.serialize('jwt', jwt));
 
         return {
           user,
-          jwt: getJwt({
-            id: user.id,
-            email: user.email
-          })
+          jwt
         };
       }
     },
-    async login(parent, { input }, { prisma }, info) {
+    async login(parent, { input }, { prisma, res }, info) {
       const { email, password } = input;
       const user = await prisma.user({ email });
 
       if (user && bcrypt.compareSync(password, user.password)) {
+        const jwt = getJwt({
+          id: user.id,
+          email: user.email
+        });
+
+        res.setHeader('Set-Cookie', cookie.serialize('jwt', jwt));
+
         return {
           user,
-          jwt: getJwt({
-            id: user.id,
-            email: user.email
-          })
+          jwt
         };
       }
 

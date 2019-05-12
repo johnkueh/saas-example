@@ -5,10 +5,11 @@ import apolloHandler, { apiPath } from '../index';
 
 dotenv.config();
 
-export const request = async ({ variables, query, headers = {} }) => {
+export const request = async ({ variables, query, headers = {}, cookies = [] }) => {
   const { body } = await supertest(apolloHandler)
     .post(apiPath)
     .set(headers)
+    .set('Cookie', cookies)
     .send({
       query,
       variables
