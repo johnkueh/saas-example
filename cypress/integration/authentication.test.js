@@ -95,3 +95,12 @@ describe('signup success', () => {
     });
   });
 });
+
+describe('non authed', () => {
+  it('visiting protected pages should be redirected to /login', () => {
+    cy.visit('/forms');
+    cy.url().should('include', '/login');
+    cy.visit('/form/edit?id=test-form');
+    cy.url().should('include', '/login');
+  });
+});
