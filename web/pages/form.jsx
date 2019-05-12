@@ -17,7 +17,7 @@ const FormPage = ({
     data: { form = {} }
   } = useQuery(FORM, { variables: { id } });
 
-  if (!form.id) return null;
+  if (!form.id) return <Layout />;
 
   return (
     <Layout>
