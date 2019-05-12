@@ -7,7 +7,7 @@ const Home = () => {
     <Layout>
       <div className="container">
         <Link href="/">
-          <h5 className="mb-3">briefgenius.com</h5>
+          <h5 className="mb-3">saasexample.com</h5>
         </Link>
         <div>
           <Link href="/signup">
