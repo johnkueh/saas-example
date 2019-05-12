@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:3000",
   "env": {
-    "prismaEndpoint": "http://localhost:4466/briefgenius/dev",
+    "prismaEndpoint": "http://localhost:4466/saas-example/dev",
     "apiEndpoint": "http://localhost:3000/api/graphql"
   }
 }

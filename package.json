@@ -1,7 +1,7 @@
 {
-  "name": "briefgenius",
+  "name": "saas-example",
   "version": "1.0.0",
-  "repository": "git@github.com:yoongfook/briefgenius.git",
+  "repository": "git@github.com:yoongfook/saas-example.git",
   "author": "John Kueh <yoongfook@gmail.com>",
   "license": "MIT",
   "private": true,
