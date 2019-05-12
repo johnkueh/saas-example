@@ -22,7 +22,7 @@ const FormsPage = () => {
 
   return (
     <Layout>
-      <h2>Welcome to BriefGenius</h2>
+      <h2>Welcome to SAAS Example</h2>
       {loading ? <div>Loading...</div> : <Forms forms={forms} />}
       <Link href="/forms/new">
         <a href="/forms/new" className="mt-3 btn btn-primary">

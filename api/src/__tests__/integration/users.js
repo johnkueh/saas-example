@@ -17,6 +17,7 @@ const prisma = new Prisma({
 
 let user;
 let jwt;
+let cookies = [];
 
 beforeEach(async () => {
   ({
@@ -33,6 +34,8 @@ beforeEach(async () => {
       }
     }
   }));
+
+  cookies = [`jwt=${jwt}`];
 });
 
 afterEach(async () => {
@@ -41,9 +44,7 @@ afterEach(async () => {
 
 it('able to get user profile', async () => {
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     query: ME
   });
 
@@ -55,9 +56,7 @@ it('able to get user profile', async () => {
 
 it('able to login successfully', async () => {
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     query: LOGIN,
     variables: {
       input: {
@@ -103,9 +102,7 @@ it('able to signup successfully', async () => {
 
 it('login - bad credentials', async () => {
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     query: LOGIN,
     variables: {
       input: {
@@ -160,9 +157,7 @@ describe('signup - validation errors', () => {
 
 it('able to update user profile successfully', async () => {
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     query: UPDATE_USER,
     variables: {
       input: {
@@ -181,9 +176,7 @@ it('able to update user profile successfully', async () => {
 
 it('able to update user password successfully', async () => {
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     query: UPDATE_USER,
     variables: {
       input: {
@@ -203,9 +196,7 @@ it('able to update user password successfully', async () => {
 describe('Update user validation errors', () => {
   it('returns correct error messages', async () => {
     const res = await request({
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      },
+      cookies,
       query: UPDATE_USER,
       variables: {
         input: {
@@ -359,9 +350,7 @@ it('able to delete user successfully', async () => {
   expect(existingUsers.length).toBe(1);
 
   await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     query: DELETE_USER
   });
 

@@ -8,6 +8,7 @@ const prisma = new Prisma({
 
 let user;
 let jwt;
+let cookies = [];
 
 beforeEach(async () => {
   ({
@@ -35,6 +36,8 @@ beforeEach(async () => {
       }
     }
   }));
+
+  cookies = [`jwt=${jwt}`];
 });
 
 afterEach(async () => {
@@ -61,9 +64,7 @@ it('able to delete own logos', async () => {
   });
 
   await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       assetId: 'public-id-1'
     },
@@ -80,9 +81,7 @@ it('able to delete own logos', async () => {
   expect(cloudinaryMock.uploader.destroy).toBeCalledWith('public-id-1');
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       id: form.id
     },
@@ -126,9 +125,7 @@ it('not able to delete other forms logos', async () => {
   });
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       assetId: 'public-id-1'
     },

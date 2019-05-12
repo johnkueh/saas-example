@@ -10,7 +10,7 @@ const AuthLayout = ({ children }) => (
           <div className="my-3 text-center">
             <Link href="/">
               <a href="/">
-                <h3>briefgenius</h3>
+                <h3>SAAS Example</h3>
               </a>
             </Link>
           </div>

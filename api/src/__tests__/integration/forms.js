@@ -7,6 +7,7 @@ const prisma = new Prisma({
 
 let user;
 let jwt;
+let cookies = [];
 
 beforeEach(async () => {
   ({
@@ -34,6 +35,8 @@ beforeEach(async () => {
       }
     }
   }));
+
+  cookies = [`jwt=${jwt}`];
 });
 
 afterEach(async () => {
@@ -69,9 +72,7 @@ it('able to get only forms for user', async () => {
   });
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     query: `
       query {
         forms {
@@ -109,9 +110,7 @@ it('able to get a single form', async () => {
   });
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       id: form.id
     },
@@ -135,9 +134,7 @@ it('able to get a single form', async () => {
 
 it('able create a form', async () => {
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       input: { name: 'A new form' }
     },
@@ -161,9 +158,7 @@ it('able create a form', async () => {
 
 it('unable to create a form with invalid fields', async () => {
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       input: { name: '' }
     },
@@ -193,9 +188,7 @@ it('able to update a form with logos', async () => {
   });
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       input: {
         id: form.id,
@@ -227,9 +220,7 @@ it('not able to update not own form', async () => {
   });
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       input: {
         id: form.id,
@@ -263,9 +254,7 @@ it('able to delete own form', async () => {
   });
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       id: form.id
     },
@@ -289,9 +278,7 @@ it('not able to delete not own form', async () => {
   });
 
   const res = await request({
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
+    cookies,
     variables: {
       id: form.id
     },

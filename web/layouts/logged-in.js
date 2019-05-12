@@ -35,7 +35,7 @@ const LoggedInLayout = ({ children }) => {
       <MainLayout>
         <Link href="/">
           <a href="/">
-            <h3>briefgenius</h3>
+            <h3>SAAS Example</h3>
           </a>
         </Link>
         <div className="my-5">{children}</div>

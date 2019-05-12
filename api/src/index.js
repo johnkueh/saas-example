@@ -2,6 +2,7 @@ import { ApolloServer, gql } from 'apollo-server-micro';
 import { makeExecutableSchema } from 'graphql-tools';
 import { applyMiddleware } from 'graphql-middleware';
 import jsonwebtoken from 'jsonwebtoken';
+import cookie from 'cookie';
 import { Prisma } from '../generated/prisma-client';
 import typeDefs from './schema';
 import resolvers from './resolvers';
@@ -25,16 +26,15 @@ const initServer = ({ context }) =>
 
 const getUser = (req, secret) => {
   try {
-    const bearer = req.headers.authorization || '';
-    const token = bearer.replace('Bearer ', '');
-    return jsonwebtoken.verify(token, secret);
+    const { jwt } = cookie.parse(req.headers.cookie || '');
+    return jsonwebtoken.verify(jwt, secret);
   } catch (error) {
     return null;
   }
 };
 
 const server = initServer({
-  context: async ({ req }) => {
+  context: async ({ req, res }) => {
     const prisma = new Prisma({
       endpoint: process.env.PRISMA_ENDPOINT
     });
@@ -42,7 +42,9 @@ const server = initServer({
 
     return {
       prisma,
-      user
+      user,
+      req,
+      res
     };
   }
 });

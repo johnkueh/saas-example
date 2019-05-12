@@ -6,12 +6,10 @@ import NProgress from 'nprogress';
 import { ApolloProvider } from 'react-apollo-hooks';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
-import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { CloudinaryContext } from 'cloudinary-react';
 import fetch from 'isomorphic-unfetch';
 import config from '../app.config';
-import { getItem } from '../lib/local-storage';
 import AuthProvider from '../contexts/authentication';
 import '../styles/index.scss';
 import 'nprogress/nprogress.css';
@@ -27,23 +25,14 @@ if (!process.browser) {
   global.fetch = fetch;
 }
 
-const httpLink = createHttpLink({
-  uri: config.API_URL
-});
-
-const authLink = setContext((_, { headers }) => {
-  const token = getItem('jwt');
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : ''
-    }
-  };
+const link = createHttpLink({
+  uri: config.API_URL,
+  credentials: 'same-origin'
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  link
 });
 
 class MyApp extends App {
